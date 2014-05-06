@@ -142,17 +142,18 @@ class EncoderReader(threading.Thread):
 
     def update_encoder_l(self, channel):
         global ENC_POS
-        self.counter_l = self.counter_l + 1
-        ENC_POS[base.LEFT] = self.counter_l
+        self.counter_l += 1
+        ENC_POS[base.LEFT] += 1
         #print "Encoder (left) counter updated: %d" % self.counter_l
 
     def update_encoder_r(self, channel):
         global ENC_POS
-        self.counter_r = self.counter_r + 1
-        ENC_POS[base.RIGHT] = self.counter_l
+        self.counter_r += 1
+        ENC_POS[base.RIGHT] += 1
         #print "Encoder (right) counter updated: %d" % self.counter_r
 
     def run(self):
+        global ENC_VEL
         GPIO.add_event_detect(config.Ol, GPIO.RISING,
                               callback=self.update_encoder_l)
         GPIO.add_event_detect(config.Or, GPIO.RISING,
@@ -162,7 +163,6 @@ class EncoderReader(threading.Thread):
         current_time_r = time.time()
         while base.RUN_FLAG:
             if (time.time() >= current_time_l + TIME_INTERVAL):
-                global ENC_VEL
                 velocity_l = (
                     self.counter_l * (WHEEL_RADIUS * CONST)
                 ) / TIME_INTERVAL
@@ -172,7 +172,6 @@ class EncoderReader(threading.Thread):
                 current_time_l = time.time()
                 #print "velocity_l %s cm/s" % velocity_l
             if (time.time() >= current_time_r + TIME_INTERVAL):
-                global ENC_VEL
                 velocity_r = (
                     self.counter_r * (WHEEL_RADIUS * CONST)
                 ) / TIME_INTERVAL

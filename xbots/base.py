@@ -174,8 +174,8 @@ class BaseBot(object):
                         reply + '\n', (self.baseIP, self.port))
 
             elif msgResult.group('CMD') == 'RESET':
-                self.encPos[LEFT] = 0.0
-                self.encPos[RIGHT] = 0.0
+                self.encPos[LEFT] = 0
+                self.encPos[RIGHT] = 0
                 print 'Encoder values reset to [' + ', '.join(
                     map(str, self.encVel)) + ']'
 
