@@ -170,7 +170,8 @@ class EncoderReader(threading.Thread):
 
                 self.counter_l = 0
                 current_time_l = time.time()
-                #print "velocity_l %s cm/s" % velocity_l
+                # print "velocity_l %s cm/s ticks sum %s" % (velocity_l,
+                #                                            ENC_POS[base.LEFT])
             if (time.time() >= current_time_r + TIME_INTERVAL):
                 velocity_r = (
                     self.counter_r * (WHEEL_RADIUS * CONST)
@@ -179,4 +180,5 @@ class EncoderReader(threading.Thread):
 
                 self.counter_r = 0
                 current_time_r = time.time()
-                #print "velocity_r %s cm/s" % velocity_r
+                # print "velocity_r %s cm/s ticks sum %s" % (velocity_r,
+                #                                            ENC_POS[base.RIGHT])
