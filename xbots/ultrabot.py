@@ -21,7 +21,7 @@ import Adafruit_BBIO.GPIO as GPIO
 DECPULSETRIGGER = 0.0001
 # loop iterations before timeout called
 INTTIMEOUT = 2100
-MAX_CENTIMETER = 350
+MAX_METER = 3.50
 
 # encoder
 WHEEL_RADIUS = 1.2  # cm
@@ -109,9 +109,9 @@ class UltraBot(base.BaseBot):
 
         # Display distance
         if intcountdown > 0:
-            intdistance = (echoduration*1000000)/58
-            #print "Distance = " + str(intdistance) + "cm"
-            return intdistance
+            intdistance = (echoduration*1000000) / 58.0
+            #print "Distance = " + str(intdistance) + "m"
+            return intdistance / 100.0
 
     def read_ultras(self):
         for idx, (trigger, echo) in enumerate(config.ULTRAS):
@@ -119,7 +119,7 @@ class UltraBot(base.BaseBot):
             distance = self._measure_ultra(trigger, echo)
             self.ultraVal[idx] = distance
 
-            if self.ultraVal[idx] >= MAX_CENTIMETER or distance is None:
+            if self.ultraVal[idx] >= MAX_METER or distance is None:
                 self.ultraVal[idx] = prevVal
 
     def read_encoders(self):
