@@ -1,5 +1,5 @@
-# ultrabot_BBB
-This is the code that runs on the BeagleBone Black to control the ultrabot.
+# Xbot_BBB
+This is the code that runs on the BeagleBone Black to control a robot.
 
 ## Overview
 Essentially this code establishes socket (UDP) connection with another device
@@ -57,7 +57,7 @@ All commands:
 
 ## Command Set
 
-* Check that the ultrabot is up and running:
+* Check that the bot is up and running:
   * Command
 
 		"$CHECK*\n"
