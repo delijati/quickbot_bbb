@@ -31,7 +31,8 @@ UEfr = "P9_26"
 UTbr = "P9_27"
 UEbr = "P9_30"
 
-ULTRAS = ((UTbl, UEbl), (UTfl, UEfl), (UTfm, UEfm), (UTfr, UEfr), (UTbr, UEbr))
+# changed ordering to minimize interferences
+ULTRAS = ((UTfm, UEfm), (UTbr, UEbr), (UTfl, UEfl), (UTfr, UEfr), (UTbl, UEbl))
 
 # encoder aka odometry
 Ol = "P9_41"
