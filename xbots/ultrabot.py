@@ -32,6 +32,7 @@ CONST = (2 * math.pi * WHEEL_RADIUS)/TICKS
 # globals
 ENC_VEL = [0.0, 0.0]
 ENC_POS = [0.0, 0.0]
+ULTRAS_DIST = [0.0, 0.0, 0.0, 0.0, 0.0]
 
 
 class UltraBot(base.BaseBot):
@@ -65,13 +66,35 @@ class UltraBot(base.BaseBot):
         super(UltraBot, self).__init__(baseIP, robotIP)
         # init encoder
         self.encoderRead = EncoderReader()
-        # init ultras
-        self._setup_ultras()
 
     def update(self):
         self.read_ultras()
         self.read_encoders()
         self.parseCmdBuffer()
+
+    def read_ultras(self):
+        self.ultraVal = ULTRAS_DIST
+
+    def read_encoders(self):
+        self.encPos = ENC_POS  # New tick count
+        self.encVel = ENC_VEL  # New tick velocity
+
+    def run(self):
+        self.ultraread = UltraReader()
+        self.ultraread.start()
+        super(UltraBot, self).run()
+
+
+class UltraReader(threading.Thread):
+    """UltraReader thread"""
+
+    ultraVal = [0.0, 0.0, 0.0, 0.0, 0.0]
+
+    def __init__(self):
+        # Initialize thread
+        threading.Thread.__init__(self)
+
+        self._setup_ultras()
 
     def _setup_ultras(self):
         for trigger, echo in config.ULTRAS:
@@ -110,18 +133,19 @@ class UltraBot(base.BaseBot):
 
             return intdistance / 100.0
 
-    def read_ultras(self):
-        for idx, (trigger, echo) in enumerate(config.ULTRAS):
-            prevVal = self.ultraVal[idx]
-            distance = self._measure_ultra(trigger, echo)
-            self.ultraVal[idx] = distance
+    def run(self):
+        global ULTRAS_DIST
 
-            if self.ultraVal[idx] >= MAX_METER or distance is None:
-                self.ultraVal[idx] = prevVal
+        while base.RUN_FLAG:
+            for idx, (trigger, echo) in enumerate(config.ULTRAS):
+                prevVal = self.ultraVal[idx]
+                distance = self._measure_ultra(trigger, echo)
+                self.ultraVal[idx] = distance
+                ULTRAS_DIST[idx] = distance
 
-    def read_encoders(self):
-        self.encPos = ENC_POS  # New tick count
-        self.encVel = ENC_VEL  # New tick velocity
+                if self.ultraVal[idx] >= MAX_METER or distance is None:
+                    self.ultraVal[idx] = prevVal
+                    ULTRAS_DIST[idx] = prevVal
 
 
 class EncoderReader(threading.Thread):

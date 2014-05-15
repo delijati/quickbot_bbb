@@ -205,7 +205,7 @@ class BaseBot(object):
         global RUN_FLAG
         self.encoderRead.start()
         try:
-            while RUN_FLAG is True:
+            while RUN_FLAG:
                 self.update()
 
                 # Flash BBB LED
