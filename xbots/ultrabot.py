@@ -106,11 +106,8 @@ class UltraBot(base.BaseBot):
 
             # Echo duration
             echoduration = echoend - echostart
-
-        # Display distance
-        if intcountdown > 0:
             intdistance = (echoduration*1000000) / 58.0
-            #print "Distance = " + str(intdistance) + "m"
+
             return intdistance / 100.0
 
     def read_ultras(self):
