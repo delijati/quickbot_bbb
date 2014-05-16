@@ -13,6 +13,7 @@ import threading
 import time
 import base
 import math
+import numpy as np
 
 import ultrabot_config as config
 import Adafruit_BBIO.GPIO as GPIO
@@ -135,17 +136,23 @@ class UltraReader(threading.Thread):
 
     def run(self):
         global ULTRAS_DIST
+        count = 3
 
         while base.RUN_FLAG:
             for idx, (trigger, echo) in enumerate(config.ULTRAS):
                 prevVal = self.ultraVal[idx]
-                distance = self._measure_ultra(trigger, echo)
+                total = []
+                # XXX test if its better to do this loop over all ultras then
+                # calculate the mean
+                for i in range(count):
+                    _distance = self._measure_ultra(trigger, echo)
+                    if _distance >= MAX_METER or _distance is None:
+                        _distance = prevVal
+                    # time.sleep(0.05)
+                    total.append(_distance)
+                distance = np.mean(total)
                 self.ultraVal[idx] = distance
                 ULTRAS_DIST[idx] = distance
-
-                if self.ultraVal[idx] >= MAX_METER or distance is None:
-                    self.ultraVal[idx] = prevVal
-                    ULTRAS_DIST[idx] = prevVal
 
 
 class EncoderReader(threading.Thread):
