@@ -134,6 +134,9 @@ class UltraReader(threading.Thread):
 
             return intdistance / 100.0
 
+    def _reject_outliers(self, data, m=2):
+        return data[abs(data - np.mean(data)) < m * np.std(data)]
+
     def run(self):
         global ULTRAS_DIST
         count = 3
@@ -150,6 +153,7 @@ class UltraReader(threading.Thread):
                         _distance = prevVal
                     # time.sleep(0.05)
                     total.append(_distance)
+                # distance = np.mean(self._reject_outliers(np.array(total)))
                 distance = np.mean(total)
                 self.ultraVal[idx] = distance
                 ULTRAS_DIST[idx] = distance
